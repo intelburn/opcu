@@ -73,7 +73,7 @@ server-groups:
       #   start: 990
       #   end: 1259
   cal-ceiling:
-    enable: no
+    enable: yes
     layout: cal_ceiling
     hosts:
       ceiling-feather:
@@ -83,7 +83,7 @@ server-groups:
         start: 0
         end: 440 #719
   cal-cubes:
-    enable: no
+    enable: yes
     layout: four_meters_l2r
     hosts:
       cube-feather:
@@ -99,14 +99,16 @@ scenes:
     - groups:
       source: Solid
   warm-cool: &startup-scene
-    - groups: [ceiling]
-      source: Water
-    # - groups: [cal-ceiling]
+    # - groups: [ceiling]
     #   source: Water
-    - groups: [arcade]
-      source: Sunset
-    - groups: [shelves]
-      source: Water #SmoothBlocks
+    - groups: [cal-cubes, cal-ceiling]
+      source: Solid
+      args:
+        rgb: [1.0, 0.0, 0.5]
+    # - groups: [arcade]
+    #   source: Sunset
+    # - groups: [shelves]
+    #   source: Water #SmoothBlocks
       # args:
       #   block_size: 9
   water:
@@ -196,6 +198,11 @@ scenes:
         spacing: 2
         grouping: 30
         rgb_colors: [[0.5,0.0,0.0], [1.0,1.0,1.0]]
+  test:
+    - groups: [cal-cubes]
+      source: Solid
+      args:
+        hsv: [0.66, 1.0, 1.0]
 
   startup: *startup-scene
   shutdown: *shutdown-scene
@@ -210,4 +217,4 @@ key-bindings:
   'S':
     scene: all-off
   't':
-    tempo:
+    scene: test
