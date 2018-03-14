@@ -24,7 +24,7 @@ server-groups:
         ip: 127.0.0.1
         port: 7892
   arcade:
-    enable: yes
+    enable: no
     layout: four_meters_l2r
     hosts:
       arcade-pi:
@@ -35,7 +35,7 @@ server-groups:
         start: 0
         end: 149
   shelves:
-    enable: yes
+    enable: no
     layout: shelves
     hosts:
       shelves-pi:
@@ -45,7 +45,7 @@ server-groups:
         start: 0
         end: 143
   ceiling:
-    enable: yes
+    enable: no
     layout: ceiling
     hosts:
       north-feather:
@@ -81,7 +81,7 @@ server-groups:
         power-supply: cal-ceiling-power
         ip: 172.26.110.73
         start: 0
-        end: 440 #719
+        end: 719
   cal-cubes:
     enable: yes
     layout: four_meters_l2r
@@ -102,9 +102,7 @@ scenes:
     # - groups: [ceiling]
     #   source: Water
     - groups: [cal-cubes, cal-ceiling]
-      source: Solid
-      args:
-        rgb: [1.0, 0.0, 0.5]
+      source: Water
     # - groups: [arcade]
     #   source: Sunset
     # - groups: [shelves]
@@ -159,6 +157,9 @@ scenes:
         spacing: 2
         grouping: 18
         rgb_colors: [[1.0,0.0,0.0], [0.0,0.0,0.0]]
+  strobe:
+    - groups:
+      source: Strobe
   bills:
     - groups: [ceiling]
       source: Strand
