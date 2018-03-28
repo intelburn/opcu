@@ -19,6 +19,7 @@ services:
      - ./plugins:/home/opc/plugins
      - ./layouts:/home/opc/layouts
      - ./opc.yml:/home/opc/opc.yml
+     - ./flask:/home/opc/flask
     secrets:
       - source: opc_yml
         uid: '777'

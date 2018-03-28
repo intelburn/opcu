@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Dropdown</title>
+	</head>
+	<body>
+		<form name="colours" method='POST'>
+			<h1>Colour 1</h1>
+			<select name=colour1 method="POST" action="/">
+				{% for colour in colours %}
+				<option value= "{{colour}}" SELECTED>{{colour}}</option>"
+				{% endfor %}
+			</select>
+			<h1>Colour 2</h1>
+			<select name=colour2 method="POST" action="/">
+				{% for colour in colours %}
+				<option value= "{{colour}}" SELECTED>{{colour}}</option>"
+				{% endfor %}
+			</select>
+			<br><br>
+			<button type="submit">Go</button>
+	</body>
+</html>
