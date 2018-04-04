@@ -30,6 +30,8 @@ import yaml
 from watchdog.events import FileSystemEventHandler, LoggingEventHandler
 from opc import opc
 from opc import color_utils
+import subprocess
+import socket
 
 DEFAULT_CONFIG_FILENAME = 'opc.yml'
 LOGGER_FORMAT = '%(asctime)-15s %(levelname)s %(name)s - %(message)s'
@@ -268,12 +270,12 @@ def load_config(filename):
     y = yaml.load(stream)
     return y
 
-def do_work(config):
+def do_work(config, scene="startup"):
     global running
     multi_client = MultiClient(config)
-    startup_scene = config['scenes']['startup']
+    current_scene = config['scenes'][scene]
     #import IPython; IPython.embed() #<<< BREAKPOINT >>>
-    load_scene(startup_scene, multi_client)
+    load_scene(current_scene, multi_client)
     multi_client.start()
     while running and not config_changed:
         try:
@@ -298,14 +300,53 @@ def main():
     yml_filename = os.environ.get('OPC_YML','./opc.yml')
     logger.info('Registered pixel sources: ' + ', '.join(color_utils.registered_sources.keys()))
     observer = setup_file_watch(yml_filename)
+    logger.info('Creating Socket for Flask')
+    # I am using a Unix socket to communicate with the Flask process that is running the web interface.
+    try:
+        os.unlink("/tmp/cal_lights")
+    except OSError:
+        if os.path.exists("/tmp/cal_lights"):
+            raise
+    logger.info("Opening socket...")
+    com = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    com.bind("/tmp/cal_lights")
+    # Start Listening for communication from the Flask script
+    com.listen()
+    frontend = subprocess.Popen(['python3', '/usr/src/opc/opc/webserver.py'])
+    scene="startup"
+    config = load_config(yml_filename)
+    #do_work(config, scene)
+    multi_client = MultiClient(config)
+    multi_client.start()
+    load_scene(config['scenes'][scene], multi_client)
+    logger.info("Entering loop")
     while running:
-        config_changed = False
-        config = load_config(yml_filename)
-        do_work(config)
+        # Wait for a connection
+        connection, client_address = com.accept()
+        logger.info("Frontend connected")
+        while running:
+            data = connection.recv(32)
+            data = data.decode()
+            logger.info("Scene Requested: {!r}".format(data))
+            if data!=scene:
+                scene=str(data)
+                load_scene(config['scenes'][scene], multi_client)
+                # config_changed = False
+                # do_work(config, scene)
+                try:
+                    time.sleep(1)
+                except KeyboardInterrupt:
+                    logger.warn('Shutting down due to keyboard interrupt.')
+                    load_scene(config['scenes']['shutdown'], multi_client)
+                    time.sleep(0.5)
+                    running = False
+    logger.debug('Stopping multi client thread')
+    multi_client.stop()
     logger.debug('Stopping file observer thread')
     observer.stop()
     logger.debug('Joining file observer thread')
     observer.join()
+    frontend.terminate()
     logger.warn('Exiting')
     sys.exit(0)
 

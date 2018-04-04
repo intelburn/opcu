@@ -5,6 +5,7 @@ ARG OPC_UID=421
 ARG INSTALL_IPYTHON="Yes Please"
 ARG OPC_SRC="/usr/src/opc"
 ENV OPC_HOME="/home/opc"
+EXPOSE 5000:5000
 
 # OPC_YML can be set to point to a config file
 

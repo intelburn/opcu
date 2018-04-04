@@ -110,26 +110,16 @@ scenes:
       # args:
       #   block_size: 9
   water:
-    - groups:
+    - groups: [cal-cubes, cal-ceiling]
       source: Water
   test:
-    - groups:
+    - groups: [cal-cubes, cal-ceiling]
       source: SmoothBlocks
       args:
         block_size: 16
   sunset:
-    - groups:
+    - groups: [cal-cubes, cal-ceiling]
       source: Sunset
-  dance:
-    - groups: [ceiling]
-      source: CycleSolid
-      args:
-        tempo: 98
-    - groups: [arcade, shelves]
-      source: CycleSolid
-      args:
-        tempo: 49
-        seed: 1
   super-green:
     - groups:
       source: Solid
@@ -140,65 +130,9 @@ scenes:
       source: Solid
       args:
         hsv: [0.66, 1.0, 1.0]
-  alert:
-    - groups: [ceiling]
-      source: CycleSolid
-      args:
-        tempo: 120
-        hsv_colors: [[0.0,1.0,0.5], [0.0,1.0,1.0]]
-    - groups: [arcade]
-      source: CycleSolid
-      args:
-        tempo: 60
-        hsv_colors: [[0.0,1.0,1.0], [0.0,1.0,0.1]]
-    - groups: [shelves]
-      source: Strand
-      args:
-        spacing: 2
-        grouping: 18
-        rgb_colors: [[1.0,0.0,0.0], [0.0,0.0,0.0]]
   strobe:
     - groups:
       source: Strobe
-  bills:
-    - groups: [ceiling]
-      source: Strand
-      args:
-        spacing: 10
-        grouping: 1
-        rgb_colors: [[1.0,0.0,0.0], [0.0,0.0,1.0]]
-    - groups: [shelves]
-      source: Strand
-      args:
-        spacing: 2
-        grouping: 18
-        rgb_colors: [[1.0,0.0,0.0], [0.0,0.0,1.0]]
-    - groups: [arcade]
-      source: Strand
-      args:
-        spacing: 2
-        grouping: 30
-        rgb_colors: [[1.0,0.0,0.0], [0.0,0.0,1.0]]
-  holiday:
-    - groups: [ceiling]
-      source: Strand
-      args:
-        spacing: 10
-        grouping: 1
-        #rgb_colors: [[1.0,0.0,0.0], [0.0,1.0,0.0], [0.0,0.0,1.0]]
-        rgb_colors: [[0.5,0.0,0.0], [1.0,1.0,1.0]]
-    - groups: [shelves]
-      source: Strand
-      args:
-        spacing: 2
-        grouping: 18
-        rgb_colors: [[0.5,0.0,0.0], [1.0,1.0,1.0]]
-    - groups: [arcade]
-      source: Strand
-      args:
-        spacing: 2
-        grouping: 30
-        rgb_colors: [[0.5,0.0,0.0], [1.0,1.0,1.0]]
   test:
     - groups: [cal-cubes]
       source: Solid
