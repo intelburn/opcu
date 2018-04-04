@@ -1,6 +1,15 @@
+# Web Frontend
+
+**WORK IN PROGRESS**
+A web frontend using the Flask Webserver is currently in the process of being written. It consists of a single dropdown menu and a Go Button. The dropdown menu is going to be generate based on the opc.yml config file. It sends the name of the dropdown menu using Unix Domain Sockets to the multi_opc.py file.
+
 # UDP version of Open Pixel Control
 
 Consuming raw or undercooked meats, poultry, seafood, shellfish or eggs may increase your risk of foodborne illness.
+
+### translate.py
+
+This file is designed to be used the the official OpenPixelControl simulator. Simply put that file on the machine that will run the simulator. Start the simulator then run translate.py.
 
 ## Installing spidev
 `sudo apt-get install python3-spidev`
