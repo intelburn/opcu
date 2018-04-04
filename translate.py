@@ -1,3 +1,6 @@
+#This is a script that translates the UDP version of OpenPixelControll to the offical TCP Version.
+#This is intended for use with the simulator provided with the official repo of OpenPixelControl.
+#Run this on the same machine that is running the simulator. This does not take any argument and will run in the foreground. Start the simulator, the run this script
 import socket
 outside = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 inside = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
