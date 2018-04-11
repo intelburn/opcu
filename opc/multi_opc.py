@@ -325,21 +325,20 @@ def main():
         connection, client_address = com.accept()
         logger.info("Frontend connected")
         while running:
-            data = connection.recv(32)
-            data = data.decode()
-            logger.info("Scene Requested: {!r}".format(data))
-            if data!=scene:
-                scene=str(data)
-                load_scene(config['scenes'][scene], multi_client)
-                # config_changed = False
-                # do_work(config, scene)
-                try:
-                    time.sleep(1)
-                except KeyboardInterrupt:
-                    logger.warn('Shutting down due to keyboard interrupt.')
-                    load_scene(config['scenes']['shutdown'], multi_client)
-                    time.sleep(0.5)
-                    running = False
+            try:
+                data = connection.recv(32)
+                data = data.decode()
+                logger.info("Scene Requested: {!r}".format(data))
+                if data!=scene:
+                    scene=str(data)
+                    load_scene(config['scenes'][scene], multi_client)
+            except KeyboardInterrupt:
+                logger.warn('Shutting down due to keyboard interrupt.')
+            finally:
+                load_scene(config['scenes']['shutdown'], multi_client)
+                time.sleep(0.5)
+                connection.close()
+                running = False
     logger.debug('Stopping multi client thread')
     multi_client.stop()
     logger.debug('Stopping file observer thread')
