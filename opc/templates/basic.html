@@ -5,9 +5,9 @@
 		<title>CAL Light Selector</title>
 	</head>
 	<body>
-		<form name="colours" method='POST'>
+		<form name="scenes" method='POST'>
 			<h1>Scene:</h1>
-			<select name=colour1 method="POST" action="/">
+			<select name=requested_scene method="POST" action="/">
 				{% for colour in colours %}
 				<option value= "{{colour}}" SELECTED>{{colour}}</option>"
 				{% endfor %}
