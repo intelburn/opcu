@@ -1,7 +1,7 @@
 # Work in Progress
 ## Web Front End
-- Get items for the dropdown from opc.yml
-- Add polish to page
+- ~~Get items for the dropdown from opc.yml~~
+- ~~Add polish to page~~
 - Maybe HTTPS?
 ## multi_opc backend
 - Debug
@@ -9,4 +9,4 @@
 # Not yet started
 - Add comments to code
 - Write more scenes
-- Remove all non-CAL configurations
+- ~~Remove all non-CAL configurations~~

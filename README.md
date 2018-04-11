@@ -1,7 +1,7 @@
 # Web Frontend
 
 **WORK IN PROGRESS**
-A web frontend using the Flask Webserver is currently in the process of being written. It consists of a single dropdown menu and a Go Button. The dropdown menu is going to be generate based on the opc.yml config file. It sends the name of the dropdown menu using Unix Domain Sockets to the multi_opc.py file.
+A web frontend using the Flask Webserver is currently in the process of being written. It consists of a single dropdown menu and a Go Button. The dropdown menu is generated based on the opc.yml config file. It sends the name of the dropdown menu using Unix Domain Sockets to the multi_opc.py file.
 
 # UDP version of Open Pixel Control
 
@@ -13,13 +13,6 @@ This file is designed to be used the the official OpenPixelControl simulator. Si
 
 ## Installing spidev
 `sudo apt-get install python3-spidev`
-
-## Running server at boot.  Add to /etc/rc.local
-On arcade box:
-`/home/pi/opcu.py apa102 &> /dev/null &`
-
-On shelves:
-`/home/pi/opcu.py lpd8806 &> /dev/null &`
 
 docker-compose run opc
 
@@ -38,10 +31,3 @@ https://learn.adafruit.com/adafruit-feather-m0-basic-proto/using-with-arduino-id
 
 This project is based on:
 https://github.com/adafruit/Adafruit_Lightship/
-
-## TODO
-
-move power calculations to groups
-
-DotStar = APA102 = Has a clock
-NeoPixels = Single-wire control
