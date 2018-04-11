@@ -329,16 +329,19 @@ def main():
                 data = connection.recv(32)
                 data = data.decode()
                 logger.info("Scene Requested: {!r}".format(data))
-                if data!=scene:
-                    scene=str(data)
-                    load_scene(config['scenes'][scene], multi_client)
+                logger.info("running= {!r}".format(running))
+                load_scene(config['scenes'][str(data)], multi_client)
+#                if data!=scene:
+#                    scene=str(data)
+#                    load_scene(config['scenes'][scene], multi_client)
             except KeyboardInterrupt:
                 logger.warn('Shutting down due to keyboard interrupt.')
-            finally:
                 load_scene(config['scenes']['shutdown'], multi_client)
                 time.sleep(0.5)
                 connection.close()
                 running = False
+            finally:
+                time.sleep(1)
     logger.debug('Stopping multi client thread')
     multi_client.stop()
     logger.debug('Stopping file observer thread')

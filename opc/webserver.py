@@ -3,12 +3,12 @@ from flask import Flask, render_template, request
 import os
 import socket
 import yaml
+import logging
 def getColours(filename):
-    logger.info('Reading configuration from %s' % filename)
+#    logger.info('Reading configuration from %s' % filename)
     stream = open(filename, 'r')
     y = yaml.load(stream)
-    print(y)
-    return y
+    return y['scenes'].keys()
 
 com = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 com.connect("/tmp/cal_lights")
@@ -17,8 +17,8 @@ app = Flask(__name__)
 
 @app.route('/', methods=['POST', 'GET'])
 def dropdown():
-    colours = ['water', 'sunset', 'test']
-    getColours(os.environ.get('OPC_YML','./opc.yml'))
+#    colours = ['water', 'sunset', 'test']
+    colours = getColours('/home/opc/opc.yml')
     if request.method == 'POST' :
         colour1 = request.form.getlist('colour1')
         print(colour1)
