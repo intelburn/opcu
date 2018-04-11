@@ -7,8 +7,14 @@ import logging
 def getColours(filename):
 #    logger.info('Reading configuration from %s' % filename)
     stream = open(filename, 'r')
-    y = yaml.load(stream)
-    return y['scenes'].keys()
+#   Control Scenes are scenes used for the back end operation of the lights but should not be visible on the web page
+    control_scenes = ['startup', 'shutdown', 'test']
+    raw = yaml.load(stream)
+    scenes=[]
+    for canidate in raw['scenes'].keys():
+        if canidate not in control_scenes:
+            scenes.append(canidate)
+    return scenes
 
 com = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 com.connect("/tmp/cal_lights")
