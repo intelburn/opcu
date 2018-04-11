@@ -15,63 +15,6 @@ power-supplies:
   arcade: 4
 
 server-groups:
-  simulator:
-    enable: no
-    layout: four_meters_l2r
-    hosts:
-      localhost:
-        <<: *host-defaults
-        ip: 127.0.0.1
-        port: 7892
-  arcade:
-    enable: no
-    layout: four_meters_l2r
-    hosts:
-      arcade-pi:
-        <<: *host-defaults
-        gamma: [1.0, 1.0, 1.0]
-        power-supply: arcade
-        ip: 10.28.20.118
-        start: 0
-        end: 149
-  shelves:
-    enable: no
-    layout: shelves
-    hosts:
-      shelves-pi:
-        <<: *host-defaults
-        power-supply: shelves
-        ip: shelves.lan
-        start: 0
-        end: 143
-  ceiling:
-    enable: no
-    layout: ceiling
-    hosts:
-      north-feather:
-        <<: *host-defaults
-        power-supply: utility-room
-        ip: 10.28.20.130
-        start: 0
-        end: 359
-      east-feather:
-        <<: *host-defaults
-        power-supply: utility-room
-        ip: 10.28.20.131
-        start: 360
-        end: 629
-      south-feather:
-        <<: *host-defaults
-        power-supply: utility-room
-        ip: 10.28.20.132
-        start: 630
-        end: 989
-      # west-feather:
-      #   <<: *host-defaults
-      #   power-supply: utility-room
-      #   ip: 10.28.20.133
-      #   start: 990
-      #   end: 1259
   cal-ceiling:
     enable: yes
     layout: cal_ceiling
@@ -98,46 +41,81 @@ scenes:
   all-off: &shutdown-scene
     - groups:
       source: Solid
-  warm-cool: &startup-scene
-    # - groups: [ceiling]
-    #   source: Water
+  rainbow-block:
     - groups: [cal-cubes, cal-ceiling]
-      source: Water
-    # - groups: [arcade]
-    #   source: Sunset
-    # - groups: [shelves]
-    #   source: Water #SmoothBlocks
-      # args:
-      #   block_size: 9
+      source: RainbowShelves
+  fancy-rgb:
+    - groups:
+      source: Plaid
+  test0:
+    - groups:
+      source: RedPhase
   water:
-    - groups: [cal-cubes, cal-ceiling]
+    - groups:
       source: Water
-  test:
-    - groups: [cal-cubes, cal-ceiling]
-      source: SmoothBlocks
-      args:
-        block_size: 16
   sunset:
-    - groups: [cal-cubes, cal-ceiling]
+    - groups:
       source: Sunset
-  super-green:
+  sailor-moon:
     - groups:
-      source: Solid
-      args:
-        hsv: [0.33, 1.0, 1.0]
-  super-blue:
-    - groups:
-      source: Solid
-      args:
-        hsv: [0.66, 1.0, 1.0]
+      source: SailorMoon
   strobe:
     - groups:
       source: Strobe
-  test:
-    - groups: [cal-cubes]
+  red:
+    - groups:
       source: Solid
       args:
-        hsv: [0.66, 1.0, 1.0]
+        rgb: [255, 0, 0]
+  blue:
+    - groups:
+      source: Solid
+      args:
+        rgb: [0, 0, 255]
+  green:
+    - groups:
+      source: Solid
+      args:
+        rgb: [0, 255, 0]
+  hulk:
+    - groups:
+      source: Strand
+      args:
+        spacing: 0
+        grouping: 18
+        rgb_colors: [[0, 255, 0], [128, 0, 128]]
+  red-white-blue:
+    - groups:
+      source: Strand
+      args:
+        spacing: 0
+        grouping: 13
+        rgb_colors: [[255, 0, 0], [255, 255, 255], [0, 0, 255]]
+  white: &startup-scene
+    - groups:
+      source: Solid
+      args:
+        rgb: [255, 255, 255]
+  demo-start:
+    - groups:
+      source: Strand
+      args:
+        spacing: 0
+        grouping: 9
+        rgb_colors: [[0.0, 0.0, 1.0], [0.0, 0.0, 0.75], [0.0, 0.0, 0.5], [0.0, 0.0, 0.0], [0.0, 0.0, 0.5], [0.0, 0.0, 0.75]]
+  demo-pwned:
+    - groups:
+      source: Strand
+      args:
+        spacing: 0
+        grouping: 9
+        rgb_colors: [[1.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.5, 0.0, 0.0], [0.0, 0.0, 0.0], [0.5, 0.0, 0.0], [0.75, 0.0, 0.0]]
+  demo-finished:
+    - groups:
+      source: Solid
+      args:
+        rgb: [255, 255, 255]
+
 
   startup: *startup-scene
   shutdown: *shutdown-scene

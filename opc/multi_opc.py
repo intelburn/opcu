@@ -269,37 +269,16 @@ def load_config(filename):
     stream = open(filename, 'r')
     y = yaml.load(stream)
     return y
-
-def do_work(config, scene="startup"):
-    global running
-    multi_client = MultiClient(config)
-    current_scene = config['scenes'][scene]
-    #import IPython; IPython.embed() #<<< BREAKPOINT >>>
-    load_scene(current_scene, multi_client)
-    multi_client.start()
-    while running and not config_changed:
-        try:
-            time.sleep(1)
-        except KeyboardInterrupt:
-            logger.warn('Shutting down due to keyboard interrupt.')
-            running = False
-    if not running: # shutting down
-        load_scene(config['scenes']['shutdown'], multi_client)
-        time.sleep(0.5)
-    logger.debug('Stopping multi client thread')
-    multi_client.stop()
-    logger.debug('Joining multi client thread')
-    multi_client.join()
-
 def main():
     global logger, config_changed, running
     args = docopt(__doc__, version='v0.0.1')
     logger = setup_logging(args['--debug'])
     signal.signal(signal.SIGINT | signal.SIGTERM, shutdown_handler)
     signal.signal(signal.SIGHUP, reload_handler)
+    #Get Filename for use later
     yml_filename = os.environ.get('OPC_YML','./opc.yml')
-    logger.info('Registered pixel sources: ' + ', '.join(color_utils.registered_sources.keys()))
-    observer = setup_file_watch(yml_filename)
+#    logger.info('Registered pixel sources: ' + ', '.join(color_utils.registered_sources.keys()))
+#    observer = setup_file_watch(yml_filename)
     logger.info('Creating Socket for Flask')
     # I am using a Unix socket to communicate with the Flask process that is running the web interface.
     try:
@@ -312,42 +291,58 @@ def main():
     com.bind("/tmp/cal_lights")
     # Start Listening for communication from the Flask script
     com.listen()
+    #Start process for Flask frontend
     frontend = subprocess.Popen(['python3', '/usr/src/opc/opc/webserver.py'])
-    scene="startup"
+    #load the YAML config into a dict
     config = load_config(yml_filename)
-    #do_work(config, scene)
+    #Load the config into the multi_client handler
     multi_client = MultiClient(config)
+    #Start the multi_client handler
     multi_client.start()
+    #Set initial scenes
+    scene='startup'
+    #Send initial scene to lights
     load_scene(config['scenes'][scene], multi_client)
     logger.info("Entering loop")
+    #lopp for connection
     while running:
         # Wait for a connection
         connection, client_address = com.accept()
         logger.info("Frontend connected")
+        #main loop for actually running the lights
         while running:
+            #Try to get data from the Flask Frontend
             try:
+                #Received data
                 data = connection.recv(32)
+                #remove the b from the front of the data
                 data = data.decode()
+                #Log some stuff
                 logger.info("Scene Requested: {!r}".format(data))
                 logger.info("running= {!r}".format(running))
-                load_scene(config['scenes'][str(data)], multi_client)
-#                if data!=scene:
-#                    scene=str(data)
-#                    load_scene(config['scenes'][scene], multi_client)
+                #Check if the data sent from Flask is actually differnet from teh current scene
+                if data!=scene:
+                    #Set the scene variable to the data sent from Flask
+                    scene=str(data)
+                    #Send the scene to the lights
+                    load_scene(config['scenes'][scene], multi_client)
+            #Check for ^+C
             except KeyboardInterrupt:
                 logger.warn('Shutting down due to keyboard interrupt.')
+                #Send the shutdown scene to the lights
                 load_scene(config['scenes']['shutdown'], multi_client)
+                #Wait for the lights to load the shutdown scene
                 time.sleep(0.5)
+                #Close the connection to Flask
                 connection.close()
+                #Stop both the main loop and the connection loop
                 running = False
+            #Sleep for inactivity
             finally:
                 time.sleep(1)
     logger.debug('Stopping multi client thread')
+    #Stop the multi_client handler
     multi_client.stop()
-    logger.debug('Stopping file observer thread')
-    observer.stop()
-    logger.debug('Joining file observer thread')
-    observer.join()
     frontend.terminate()
     logger.warn('Exiting')
     sys.exit(0)
