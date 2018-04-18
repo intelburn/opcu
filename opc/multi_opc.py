@@ -73,7 +73,7 @@ class ServerGroup(object):
         logger.info('Setting up %s hosts' % self.name)
         for k,v in self.hosts.items():
             gamma = v.get('gamma')
-            client = opc.Client(host=v['ip'], port=v['port'], gamma=gamma, verbose=False, udp=False)
+            client = opc.Client(host=v['ip'], port=v['port'], gamma=gamma, verbose=False, udp=v['udp'])
             if client.can_connect():
                 logger.info('\tsending to %s:\t(%s:%d)\t[%d-%d] %d' % (k, v['ip'], v['port'], v['start'], v['end'], v['end']-v['start']+1))
                 self.clients.append([client, v['start'], v['end']])
