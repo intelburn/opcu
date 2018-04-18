@@ -37,7 +37,7 @@ import socket
 
 class Client(object):
 
-    def __init__(self, server_ip_port=None, host=None, port=None, long_connection=True, verbose=False, gamma=(1.0,1.0,1.0)):
+    def __init__(self, server_ip_port=None, host=None, port=None, long_connection=True, verbose=False, gamma=(1.0,1.0,1.0), udp=True):
         """Create an OPC client object which sends pixels to an OPC server.
 
         server_ip_port should be an ip:port or hostname:port as a single string.
@@ -60,7 +60,7 @@ class Client(object):
 
         """
         self.verbose = verbose
-        self._udp = True
+        self._udp = udp
         self._long_connection = long_connection
         self._gamma = gamma
         if host and port:
