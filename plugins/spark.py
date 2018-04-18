@@ -19,9 +19,9 @@ class Spark(color_utils.PixelGenerator):
         """
         r = g = b = 0
         # make a moving white dot showing the order of the pixels in the layout file
-        spark_ii = (t*80) % self.n_pixels()
+        spark_ii = (t*160) % self.n_pixels()
         spark_rad = 16
-        spark_val = max(0, (spark_rad - color_utils.mod_dist(ii, spark_ii, self.n_pixels())) / spark_rad)
+        spark_val = max(0, (spark_rad - color_utils.mod_dist(ii, spark_ii, self.n_pixels())) / spark_rad)*2
         spark_val = min(1, spark_val*2)
         r += spark_val
         g += spark_val

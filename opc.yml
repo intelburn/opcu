@@ -47,8 +47,19 @@ scenes:
   fancy-rgb:
     - groups:
       source: Plaid
-  test0:
+  darth-vader:
     - groups:
+      source: RedPhase
+  luke:
+    - groups:
+      source: GreenPhase
+  obi-wan:
+    - groups:
+      source: BluePhase
+  anikan:
+    - groups: [cal-ceiling]
+      source: BluePhase
+    - groups: [cal-cubes]
       source: RedPhase
   water:
     - groups:
@@ -72,6 +83,11 @@ scenes:
       source: Solid
       args:
         rgb: [0, 0, 255]
+  purple:
+    - groups:
+      source: Solid
+      args:
+        rgb: [255, 0, 255]
   green:
     - groups:
       source: Solid
@@ -115,6 +131,9 @@ scenes:
       source: Solid
       args:
         rgb: [255, 255, 255]
+  spark:
+    - groups:
+      source: Spark
 
 
   startup: *startup-scene
