@@ -325,7 +325,12 @@ def main():
                     #Set the scene variable to the data sent from Flask
                     scene=str(data)
                     #Send the scene to the lights
-                    load_scene(config['scenes'][scene], multi_client)
+                    try:
+                        #Ensure that scene is valid
+                        load_scene(config['scenes'][scene], multi_client)
+                    except KeyError:
+                        #If scene is broken, throw and error but keep previous scene running
+                        logger.warn("Invalid Scene")
             #Check for ^+C
             except KeyboardInterrupt:
                 logger.warn('Shutting down due to keyboard interrupt.')
