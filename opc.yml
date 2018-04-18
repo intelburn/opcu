@@ -127,9 +127,6 @@ scenes:
       source: Solid
       args:
         rgb: [255, 255, 255]
-  spark:
-    - groups:
-      source: Spark
 
 
   startup: *startup-scene
