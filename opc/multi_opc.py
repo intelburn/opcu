@@ -36,22 +36,11 @@ import socket
 DEFAULT_CONFIG_FILENAME = 'opc.yml'
 LOGGER_FORMAT = '%(asctime)-15s %(levelname)s %(name)s - %(message)s'
 DEFAULT_LOGGER_LEVEL = logging.INFO
-USE_CONFIG_POLLING = True  # using polling due to: https://github.com/docker/docker/issues/18246
 
 logger = None
 running = True
 config_changed = False
 
-# def parse_server(server):
-#     # IPv6 address with port or IPv4 with port
-#     if (']' in server and ':' in server) or server.count(':') == 1:
-#         ip, port = server.rsplit(':', 1)
-#     # Just an IP
-#     else:
-#         ip = server
-#         port = DEFAULT_PORT
-#     ip = ip.strip('[]')
-#     return ipaddress.ip_address(ip), port
 
 class ServerGroup(object):
     def __init__(self, name, hosts, layout):
@@ -233,11 +222,10 @@ def load_config(filename):
     return y
 
 def main():
-    global logger, config_changed, running
+    global logger, running
     args = docopt(__doc__, version='v0.0.1')
     logger = setup_logging(args['--debug'])
     signal.signal(signal.SIGINT | signal.SIGTERM, shutdown_handler)
-    signal.signal(signal.SIGHUP, reload_handler)
     #Get Filename for use later
     yml_filename = os.environ.get('OPC_YML','./opc.yml')
 #    logger.info('Registered pixel sources: ' + ', '.join(color_utils.registered_sources.keys()))
@@ -287,12 +275,14 @@ def main():
                 if data!=scene:
                     #Set the scene variable to the data sent from Flask
                     scene=str(data)
-                    #Send the scene to the lights
+                    #Get Lastest version of the config file
+                    config = load_config(yml_filename)
+                    #Try to catch invalid scenes
                     try:
-                        #Ensure that scene is valid
+                        #Send the scene to the lights
                         load_scene(config['scenes'][scene], multi_client)
+                    #If a scene is invalid send a warning to the logger, then do nothing
                     except KeyError:
-                        #If scene is broken, throw and error but keep previous scene running
                         logger.warn("Invalid Scene")
             #Check for ^+C
             except KeyboardInterrupt:
@@ -308,6 +298,7 @@ def main():
             #Sleep for inactivity
             finally:
                 time.sleep(1)
+                
     logger.debug('Stopping multi client thread')
     #Stop the multi_client handler
     multi_client.stop()

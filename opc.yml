@@ -17,6 +17,7 @@ server-groups:
     hosts:
       ceiling-feather:
         <<: *host-defaults
+        udp: no
         ip: 172.26.110.73
         start: 0
         end: 719
@@ -26,6 +27,7 @@ server-groups:
     hosts:
       cube-feather:
         <<: *host-defaults
+        udp: no
         ip: 172.26.110.74
         start: 0
         end: 240
