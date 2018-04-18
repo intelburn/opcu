@@ -13,7 +13,7 @@ def getScenes(filename):
     #Convert stream from file into python dict
     raw = yaml.load(stream)
     #Set up empty dict for scenes to end up
-    scenes=[]
+    scenes=[" "]
     #loop through the keys from the screnes as described in YAML data
     for canidate in raw['scenes'].keys():
         #Check to insure scene is not a control scene
