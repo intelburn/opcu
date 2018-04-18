@@ -8,8 +8,8 @@
 		<form name="scenes" method='POST'>
 			<h1>Scene:</h1>
 			<select name=requested_scene method="POST" action="/">
-				{% for colour in colours %}
-				<option value= "{{colour}}" SELECTED>{{colour}}</option>"
+				{% for scene in scenes %}
+				<option value= "{{scene}}" SELECTED>{{scene}}</option>"
 				{% endfor %}
 			</select>
 			<br><br>

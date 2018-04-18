@@ -3,7 +3,6 @@ from flask import Flask, render_template, request
 import os
 import socket
 import yaml
-import logging
 #The method for getting the list of scenes from the config file
 def getScenes(filename):
     #Get config file as stream of data
@@ -13,7 +12,7 @@ def getScenes(filename):
     #Convert stream from file into python dict
     raw = yaml.load(stream)
     #Set up empty dict for scenes to end up
-    scenes=[" "]
+    scenes=[]
     #loop through the keys from the screnes as described in YAML data
     for canidate in raw['scenes'].keys():
         #Check to insure scene is not a control scene
@@ -51,4 +50,4 @@ def select_scenes():
 #Check to see if this is being called by another script or interpreter
 if __name__ == "__main__":
     #Run Flask on the wildcard IP address
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=8080)
