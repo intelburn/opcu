@@ -6,13 +6,8 @@ fps: 30
 
 host-defaults:    &host-defaults
   port: 7890
-  sub-pixel-power: 20 #milliamps
   gamma: [1.0, 1.0, 1.0]
 
-power-supplies:
-  utility-room: 100
-  shelves: 10
-  arcade: 4
 
 server-groups:
   cal-ceiling:
@@ -21,7 +16,6 @@ server-groups:
     hosts:
       ceiling-feather:
         <<: *host-defaults
-        power-supply: cal-ceiling-power
         ip: 172.26.110.73
         start: 0
         end: 719
@@ -31,7 +25,6 @@ server-groups:
     hosts:
       cube-feather:
         <<: *host-defaults
-        power-supply: cal-ceiling-power
         ip: 172.26.110.74
         start: 0
         end: 240

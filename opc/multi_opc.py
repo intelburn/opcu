@@ -56,7 +56,7 @@ config_changed = False
 class ServerGroup(object):
     def __init__(self, name, hosts, layout):
         self.name = name
-        self.hosts = hosts # {'name': {ip:, port:, start:, end:, power-supply: }}
+        self.hosts = hosts # {'name': {ip:, port:, start:, end:}}
         self.clients = []  # [(client,start_pixel,end_pixel)...]
         self.layout = layout
         self.source = None
@@ -83,14 +83,6 @@ class ServerGroup(object):
 
     def connected(self):
         return self.client != None
-
-    def power_use(self, mA_per_pixel):
-        '''calculate the approixmate power usage for the currently stored pixels.'''
-        total_power = 0.0
-        for (r,g,b) in self._pixels:
-            for i in (r,g,b):
-                total_power += abs(i / 255.0) * mA_per_pixel
-        return total_power
 
     def calculate_pixels(self, t):
         if not self.source or not self.clients:
