@@ -204,31 +204,6 @@ def load_scene(scene, multi_client):
             multi_client.set_group_class(name, source_class, source_args)
 
 
-class ConfigEventHandler(FileSystemEventHandler):
-    def __init__(self, config_file):
-        self.__config_file = config_file
-        super()
-
-    def on_modified(self, event):
-        global config_changed
-        if event.src_path == self.__config_file:
-            logger.warn('Configuration file %s was modified.' % self.__config_file)
-            config_changed = True
-
-
-def setup_file_watch(yml_filename):
-    event_handler = ConfigEventHandler(yml_filename)
-    if USE_CONFIG_POLLING:
-        from watchdog.observers.polling import PollingObserver
-        observer = PollingObserver()
-    else:
-        from watchdog.observers import Observer
-        observer = Observer()
-    parent_dir = os.path.dirname(yml_filename)
-    observer.schedule(event_handler, parent_dir, recursive=False)
-    observer.start()
-    return observer
-
 def setup_logging(debug=False):
     if debug:
         level = logging.DEBUG
@@ -250,17 +225,13 @@ def shutdown_handler(signum, frame):
     global running
     running = False
 
-def reload_handler(signum, frame):
-    global config_changed
-    logger.warn('Signal handler called with signal %d' % signum)
-    logger.info('Reloading config...')
-    config_changed = True
 
 def load_config(filename):
     logger.info('Reading configuration from %s' % filename)
     stream = open(filename, 'r')
     y = yaml.load(stream)
     return y
+
 def main():
     global logger, config_changed, running
     args = docopt(__doc__, version='v0.0.1')
