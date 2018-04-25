@@ -19,7 +19,7 @@ server-groups:
         <<: *host-defaults
         ip: 172.26.110.73
         start: 0
-        end: 460 #719
+        end: 440 #719
   cal-cubes:
     enable: yes
     layout: four_meters_l2r
