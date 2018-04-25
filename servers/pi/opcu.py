@@ -7,7 +7,7 @@ import argparse
 import math
 import signal
 
-DEFAULT_MAX_LEDS = 512
+DEFAULT_MAX_LEDS = 720
 DEFAULT_UDP_PORT = 7890
 DEFAULT_SPIDEV_BUS = 0
 DEFAULT_SPIDEV_DEVICE = 0
