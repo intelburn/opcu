@@ -19,7 +19,7 @@ server-groups:
         <<: *host-defaults
         ip: 172.26.110.73
         start: 0
-        end: 719
+        end: 460 #719
   cal-cubes:
     enable: yes
     layout: four_meters_l2r
@@ -105,21 +105,13 @@ scenes:
     - groups:
       source: Solid
       args:
-        rgb: [255, 255, 255]
+        rgb: [128, 128, 128]
   demo-start:
     - groups:
-      source: Strand
-      args:
-        spacing: 0
-        grouping: 9
-        rgb_colors: [[0.0, 0.0, 1.0], [0.0, 0.0, 0.75], [0.0, 0.0, 0.5], [0.0, 0.0, 0.0], [0.0, 0.0, 0.5], [0.0, 0.0, 0.75]]
+      source: BluePhase
   demo-pwned:
     - groups:
-      source: Strand
-      args:
-        spacing: 0
-        grouping: 9
-        rgb_colors: [[1.0, 0.0, 0.0], [0.75, 0.0, 0.0], [0.5, 0.0, 0.0], [0.0, 0.0, 0.0], [0.5, 0.0, 0.0], [0.75, 0.0, 0.0]]
+      source: RedPhase
   demo-finished:
     - groups:
       source: Solid
