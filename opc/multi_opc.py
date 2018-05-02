@@ -228,8 +228,7 @@ def main():
     signal.signal(signal.SIGINT | signal.SIGTERM, shutdown_handler)
     #Get Filename for use later
     yml_filename = os.environ.get('OPC_YML','./opc.yml')
-#    logger.info('Registered pixel sources: ' + ', '.join(color_utils.registered_sources.keys()))
-#    observer = setup_file_watch(yml_filename)
+   logger.info('Registered pixel sources: ' + ', '.join(color_utils.registered_sources.keys()))
     logger.info('Creating Socket for Flask')
     # I am using a Unix socket to communicate with the Flask process that is running the web interface.
     try:
