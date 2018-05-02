@@ -18,11 +18,13 @@ import os
 import sys
 import signal
 import threading
+import socket
 import re
 import json
 import time
 import copy
 import logging
+import subprocess
 from importlib import import_module
 from configparser import ConfigParser
 from docopt import docopt
@@ -30,8 +32,8 @@ import yaml
 from watchdog.events import FileSystemEventHandler, LoggingEventHandler
 from opc import opc
 from opc import color_utils
-import subprocess
-import socket
+
+
 
 DEFAULT_CONFIG_FILENAME = 'opc.yml'
 LOGGER_FORMAT = '%(asctime)-15s %(levelname)s %(name)s - %(message)s'
