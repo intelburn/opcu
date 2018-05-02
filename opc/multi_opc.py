@@ -243,6 +243,7 @@ def main():
     # Start Listening for communication from the Flask script
     com.listen()
     #Start process for Flask frontend
+    #potential issue: use of hardcoded path for the location of the frontend
     frontend = subprocess.Popen(['python3', '/usr/src/opc/opc/webserver.py'])
     #load the YAML config into a dict
     config = load_config(yml_filename)
@@ -255,50 +256,47 @@ def main():
     #Send initial scene to lights
     load_scene(config['scenes'][scene], multi_client)
     logger.info("Entering loop")
-    #lopp for connection
+    # Wait for a connection from the frontend
+    connection, client_address = com.accept()
+    logger.info("Frontend connected")
+    #main loop for actually running the lights
     while running:
-        # Wait for a connection
-        connection, client_address = com.accept()
-        logger.info("Frontend connected")
-        #main loop for actually running the lights
-        while running:
-            #Try to get data from the Flask Frontend
-            try:
-                #Received data
-                data = connection.recv(32)
-                #remove the b from the front of the data
-                data = data.decode()
-                #Log some stuff
-                logger.info("Scene Requested: {!r}".format(data))
-                logger.info("running= {!r}".format(running))
-                #Check if the data sent from Flask is actually differnet from teh current scene
-                if data!=scene:
-                    #Set the scene variable to the data sent from Flask
-                    scene=str(data)
-                    #Get Lastest version of the config file
-                    config = load_config(yml_filename)
-                    #Try to catch invalid scenes
-                    try:
-                        #Send the scene to the lights
-                        load_scene(config['scenes'][scene], multi_client)
-                    #If a scene is invalid send a warning to the logger, then do nothing
-                    except KeyError:
-                        logger.warn("Invalid Scene")
-            #Check for ^+C
-            except KeyboardInterrupt:
-                logger.warn('Shutting down due to keyboard interrupt.')
-                #Send the shutdown scene to the lights
-                load_scene(config['scenes']['shutdown'], multi_client)
-                #Wait for the lights to load the shutdown scene
-                time.sleep(0.5)
-                #Close the connection to Flask
-                connection.close()
-                #Stop both the main loop and the connection loop
-                running = False
-            #Sleep for inactivity
-            finally:
-                time.sleep(1)
-                
+        #Try to get data from the Flask Frontend
+        try:
+            #Received data
+            data = connection.recv(32)
+            #remove the b from the front of the data
+            data = data.decode()
+            #Log some stuff
+            logger.info("Scene Requested: {!r}".format(data))
+            logger.info("running= {!r}".format(running))
+            #Check if the data sent from Flask is actually differnet from teh current scene
+            if data!=scene:
+                #Set the scene variable to the data sent from Flask
+                scene=str(data)
+                #Get Lastest version of the config file
+                config = load_config(yml_filename)
+                #Try to catch invalid scenes
+                try:
+                    #Send the scene to the lights
+                    load_scene(config['scenes'][scene], multi_client)
+                #If a scene is invalid send a warning to the logger, then do nothing
+                except KeyError:
+                    logger.warn("Invalid Scene")
+        #Check for ^+C
+        except KeyboardInterrupt:
+            logger.warn('Shutting down due to keyboard interrupt.')
+            #Send the shutdown scene to the lights
+            load_scene(config['scenes']['shutdown'], multi_client)
+            #Wait for the lights to load the shutdown scene
+            time.sleep(0.5)
+            #Close the connection to Flask
+            connection.close()
+            #Stop both the main loop and the connection loop
+            running = False
+        #Sleep for inactivity
+        finally:
+            time.sleep(1)
     logger.debug('Stopping multi client thread')
     #Stop the multi_client handler
     multi_client.stop()
