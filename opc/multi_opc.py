@@ -26,13 +26,10 @@ import copy
 import logging
 import subprocess
 from importlib import import_module
-from configparser import ConfigParser
 from docopt import docopt
 import yaml
-from watchdog.events import FileSystemEventHandler, LoggingEventHandler
 from opc import opc
 from opc import color_utils
-
 
 
 DEFAULT_CONFIG_FILENAME = 'opc.yml'
@@ -41,7 +38,6 @@ DEFAULT_LOGGER_LEVEL = logging.INFO
 
 logger = None
 running = True
-config_changed = False
 
 
 class ServerGroup(object):
@@ -62,7 +58,7 @@ class ServerGroup(object):
 
     def connect(self):
         logger.info('Setting up %s hosts' % self.name)
-        for k,v in self.hosts.items():
+        for k, v in self.hosts.items():
             gamma = v.get('gamma')
             client = opc.Client(host=v['ip'], port=v['port'], gamma=gamma, verbose=False, udp=v['udp'])
             if client.can_connect():
@@ -70,7 +66,7 @@ class ServerGroup(object):
                 self.clients.append([client, v['start'], v['end']])
             else:
                 # can't connect, but keep running in case the server appears later
-                logger.warn('\tWARNING: could not connect to %s:%s' % (v['ip'],v['port']))
+                logger.warn('\tWARNING: could not connect to %s:%s' % (v['ip'], v['port']))
 
     def connected(self):
         return self.client != None
@@ -230,7 +226,7 @@ def main():
     signal.signal(signal.SIGINT | signal.SIGTERM, shutdown_handler)
     #Get Filename for use later
     yml_filename = os.environ.get('OPC_YML','./opc.yml')
-   logger.info('Registered pixel sources: ' + ', '.join(color_utils.registered_sources.keys()))
+    logger.info('Registered pixel sources: ' + ', '.join(color_utils.registered_sources.keys()))
     logger.info('Creating Socket for Flask')
     # I am using a Unix socket to communicate with the Flask process that is running the web interface.
     try:
